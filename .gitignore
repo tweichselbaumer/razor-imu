@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+/.vs
+/src/razor-imu/.vs/razor-imu/v15
+/src/razor-imu/Release
+/src/razor-imu/__vm
