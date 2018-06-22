@@ -18,7 +18,7 @@ uint8_t pBuffer[BUFFER_SIZE];
 LinkUpRaw linkUpConnector;
 uint8_t temperature_update = 1;
 
-PACK(struct ImuData {
+PACK(ImuData {
 	uint32_t timestamp;
 	int16_t gx;
 	int16_t gy;
