@@ -6,6 +6,12 @@
 #define BAUTRATE 921600
 
 #define INTERRUPT_PIN 4
+#define CAMERA_TRIGGER_PIN 10
+#define LED_PIN 13
+
+#define CAMERA_SAMPLE_RATE 6
+#define TEMPERATUR_SAMPLE_RATE 40
+#define CAMERA_TRIGGER_PULSE 1
 
 #define BUFFER_SIZE 64
 #define SAMPLE_RATE 200
@@ -13,12 +19,10 @@
 #define ACCEL_FSR 16
 #define LFP 188
 
-int count = 0;
-
 MPU9250_DMP imu;
 uint8_t pBuffer[BUFFER_SIZE];
 LinkUpRaw linkUpConnector;
-uint8_t temperature_update = 1;
+uint32_t sample_counter = 0;
 
 PACK(ImuData{
 	uint32_t timestamp;
@@ -29,11 +33,14 @@ PACK(ImuData{
 	int16_t ay;
 	int16_t az;
 	int16_t temperature;
+	bool cam;
 	};)
 
 	void setup()
 	{
 		pinMode(INTERRUPT_PIN, INPUT_PULLUP);
+		pinMode(LED_PIN, OUTPUT);
+		pinMode(CAMERA_TRIGGER_PIN, OUTPUT);
 
 		SerialPort.begin(BAUTRATE);
 		SerialPort.setTimeout(1);
@@ -51,17 +58,29 @@ PACK(ImuData{
 
 	void loop()
 	{
+		bool bCamTrigger = false;
 		if (digitalRead(INTERRUPT_PIN) == LOW)
 		{
-			if (temperature_update > SAMPLE_RATE) {
+			if (sample_counter % TEMPERATUR_SAMPLE_RATE == 0)
+			{
 				imu.update(UPDATE_ACCEL | UPDATE_GYRO | UPDATE_TEMP);
-				temperature_update = 1;
+				digitalWrite(LED_PIN, !digitalRead(LED_PIN));
 			}
-			else {
+			else
+			{
 				imu.update(UPDATE_ACCEL | UPDATE_GYRO);
-				temperature_update++;
 			}
-			sendIMUData();
+			if (sample_counter % CAMERA_SAMPLE_RATE == 0)
+			{
+				bCamTrigger = true;
+				digitalWrite(CAMERA_TRIGGER_PIN, HIGH);
+			}
+			if (sample_counter % (CAMERA_SAMPLE_RATE + CAMERA_TRIGGER_PULSE) == 0)
+			{
+				digitalWrite(CAMERA_TRIGGER_PIN, LOW);
+			}
+			sendIMUData(bCamTrigger);
+			sample_counter++;
 		}
 		else
 		{
@@ -75,19 +94,20 @@ PACK(ImuData{
 		}
 	}
 
-	void sendIMUData(void)
+	void sendIMUData(bool bCamTrigger)
 	{
 		LinkUpPacket packet;
 		packet.pData = (uint8_t*)calloc(1, sizeof(ImuData));
 
 		ImuData *pData = (ImuData*)packet.pData;
-		pData->timestamp = imu.time;
+		pData->timestamp = sample_counter;
 		pData->ax = imu.ax;
 		pData->ay = imu.ay;
 		pData->az = imu.az;
 		pData->gx = imu.gx;
 		pData->gy = imu.gy;
 		pData->gz = imu.gz;
+		pData->cam = bCamTrigger;
 		pData->temperature = imu.temperature;
 		packet.nLength = sizeof(ImuData);
 		linkUpConnector.send(packet);
