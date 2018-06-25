@@ -26,6 +26,7 @@ uint32_t sample_counter = 0;
 
 PACK(ImuData{
 	uint32_t timestamp;
+	uint32_t sample;
 	int16_t gx;
 	int16_t gy;
 	int16_t gz;
@@ -100,7 +101,8 @@ PACK(ImuData{
 		packet.pData = (uint8_t*)calloc(1, sizeof(ImuData));
 
 		ImuData *pData = (ImuData*)packet.pData;
-		pData->timestamp = sample_counter;
+		pData->timestamp = imu.time;
+		pData->sample = sample_counter;
 		pData->ax = imu.ax;
 		pData->ay = imu.ay;
 		pData->az = imu.az;
