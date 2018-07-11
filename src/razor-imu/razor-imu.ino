@@ -2,14 +2,15 @@
 #include "LinkUp\LinkUpRaw.h"
 #include "LinkUp\Platform.h"
 
-#define SerialPort SerialUSB
-#define BAUTRATE 921600
+#define SerialPort Serial1
+//#define SerialPort SerialUSB
+#define BAUTRATE 115200
 
 #define INTERRUPT_PIN 4
 #define CAMERA_TRIGGER_PIN 10
 #define LED_PIN 13
 
-#define CAMERA_SAMPLE_RATE 6
+#define CAMERA_SAMPLE_RATE 10
 #define TEMPERATUR_SAMPLE_RATE 40
 #define CAMERA_TRIGGER_PULSE 1
 
@@ -74,7 +75,7 @@ PACK(ImuData{
 			if (sample_counter % CAMERA_SAMPLE_RATE == 0)
 			{
 				bCamTrigger = true;
-				digitalWrite(CAMERA_TRIGGER_PIN, HIGH);
+				digitalWrite(CAMERA_TRIGGER_PIN, HIGH);			
 			}
 			if (sample_counter % (CAMERA_SAMPLE_RATE + CAMERA_TRIGGER_PULSE) == 0)
 			{
