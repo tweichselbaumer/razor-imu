@@ -19,7 +19,7 @@
 #define ACCEL_FSR 16
 #define LFP 188
 
-#define REBOOT_TIMEOUT 200*10
+#define SEND_TIMEOUT 200*1
 
 String readString;
 
@@ -27,7 +27,7 @@ MPU9250_DMP imu;
 uint8_t pBuffer[BUFFER_SIZE];
 LinkUpRaw linkUpConnector;
 uint32_t sample_counter = 0;
-uint16_t rebootTimeout = 0;
+uint16_t sendTimeout = 0;
 
 PACK(ImuData{
 	uint32_t timestamp;
@@ -51,10 +51,6 @@ PACK(ImuData{
 		SerialPort.begin(BAUTRATE);
 		SerialPort.setTimeout(1);
 
-		SerialUSB.begin(BAUTRATE);
-		SerialUSB.setTimeout(1);
-
-
 		imu.begin();
 		imu.setSensors(INV_XYZ_GYRO | INV_XYZ_ACCEL);
 		imu.setSampleRate(SAMPLE_RATE);
@@ -70,38 +66,30 @@ PACK(ImuData{
 	{
 		if (SerialPort.available())
 		{
-			char c = SerialPort.read();
-			if (c != '\n' && readString.length() < 255)
+			uint16_t nBytesRead = SerialPort.readBytes(pBuffer, BUFFER_SIZE);
+			linkUpConnector.progress(pBuffer, nBytesRead);
+			while (linkUpConnector.hasNext())
 			{
-				readString += c;
-			}
-			else
-			{
-				if (readString.length() > 0)
-				{
-					SerialUSB.println(readString);
+				LinkUpPacket packet = linkUpConnector.next();
+				if (packet.nLength == 1 && packet.pData[0] == 1) {
+					sendTimeout = SEND_TIMEOUT;
+					free(packet.pData);
 				}
-				if (readString.indexOf("Version 2.18.1263") >= 0)
-				{
-					SerialUSB.println("REBOOT DETECTED" + readString);
-					rebootTimeout = REBOOT_TIMEOUT;
-				}
-				readString = "";
 			}
 		}
 		bool bCamTrigger = false;
 		if (digitalRead(INTERRUPT_PIN) == LOW)
 		{
-			if (rebootTimeout > 0) {
-				rebootTimeout--;
-			}
-			if (rebootTimeout == 1) {
-				SerialUSB.println("REBOOT TIMEOUT OVER!");
+			if (sendTimeout > 0) {
+				sendTimeout--;
 			}
 			if (sample_counter % TEMPERATUR_SAMPLE_RATE == 0)
 			{
 				imu.update(UPDATE_ACCEL | UPDATE_GYRO | UPDATE_TEMP);
-				digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+				if (sendTimeout != 0)
+				{
+					digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+				}
 			}
 			else
 			{
@@ -126,7 +114,7 @@ PACK(ImuData{
 
 			if (nBytesToSend > 0)
 			{
-				if (rebootTimeout == 0) 
+				if (sendTimeout != 0)
 				{
 					SerialPort.write(pBuffer, nBytesToSend);
 				}
