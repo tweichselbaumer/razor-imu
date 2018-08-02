@@ -28,10 +28,11 @@ uint8_t pBuffer[BUFFER_SIZE];
 LinkUpRaw linkUpConnector;
 uint32_t sample_counter = 0;
 uint16_t sendTimeout = 0;
+uint32_t time_us;
 
 PACK(ImuData{
-	uint32_t timestamp;
-	uint32_t sample;
+	uint32_t timestamp_ms;
+	uint32_t timestamp_us;
 	int16_t gx;
 	int16_t gy;
 	int16_t gz;
@@ -83,6 +84,7 @@ PACK(ImuData{
 			if (sendTimeout > 0) {
 				sendTimeout--;
 			}
+			time_us = micros();
 			if (sample_counter % TEMPERATUR_SAMPLE_RATE == 0)
 			{
 				imu.update(UPDATE_ACCEL | UPDATE_GYRO | UPDATE_TEMP);
@@ -98,11 +100,17 @@ PACK(ImuData{
 			if (sample_counter % CAMERA_SAMPLE_RATE == 0)
 			{
 				bCamTrigger = true;
-				digitalWrite(CAMERA_TRIGGER_PIN, HIGH);
+				if (sendTimeout != 0)
+				{
+					digitalWrite(CAMERA_TRIGGER_PIN, HIGH);
+				}
 			}
 			if ((sample_counter + CAMERA_TRIGGER_PULSE) % CAMERA_SAMPLE_RATE == 0)
 			{
-				digitalWrite(CAMERA_TRIGGER_PIN, LOW);
+				if (sendTimeout != 0)
+				{
+					digitalWrite(CAMERA_TRIGGER_PIN, LOW);
+				}
 			}
 			sendIMUData(bCamTrigger);
 			sample_counter++;
@@ -128,8 +136,8 @@ PACK(ImuData{
 		packet.pData = (uint8_t*)calloc(1, sizeof(ImuData));
 
 		ImuData *pData = (ImuData*)packet.pData;
-		pData->timestamp = imu.time;
-		pData->sample = sample_counter;
+		pData->timestamp_ms = imu.time;
+		pData->timestamp_us = time_us;
 		pData->ax = imu.ax;
 		pData->ay = imu.ay;
 		pData->az = imu.az;
