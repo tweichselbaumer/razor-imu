@@ -16,6 +16,12 @@
     <Filter Include="LinkUp">
       <UniqueIdentifier>{347ed2e3-98ad-43a8-9c41-1e555fced2f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SparkFunMPU9259-DMP">
+      <UniqueIdentifier>{05496d83-da35-4340-8342-7db2900873e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SparkFunMPU9259-DMP\util">
+      <UniqueIdentifier>{1da875bf-b340-4725-86c9-13b34e5eedd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.razor-imu.vsarduino.h">
@@ -30,6 +36,36 @@
     <ClInclude Include="LinkUp\Platform.h">
       <Filter>LinkUp</Filter>
     </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\MPU9250_RegisterMap.h">
+      <Filter>SparkFunMPU9259-DMP</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\SparkFunMPU9250-DMP.h">
+      <Filter>SparkFunMPU9259-DMP</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_clk.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_i2c.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_log.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\dmpKey.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\dmpmap.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\inv_mpu.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\inv_mpu_dmp_motion_driver.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SparkFunMPU9250-DMP\util\MPU9250_RegisterMap.h">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LinkUp\CRC16.cpp">
@@ -40,6 +76,24 @@
     </ClCompile>
     <ClCompile Include="LinkUp\Platform.cpp">
       <Filter>LinkUp</Filter>
+    </ClCompile>
+    <ClCompile Include="SparkFunMPU9250-DMP\SparkFunMPU9250-DMP.cpp">
+      <Filter>SparkFunMPU9259-DMP</Filter>
+    </ClCompile>
+    <ClCompile Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_clk.c">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClCompile>
+    <ClCompile Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_i2c.cpp">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClCompile>
+    <ClCompile Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_log.cpp">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClCompile>
+    <ClCompile Include="SparkFunMPU9250-DMP\util\inv_mpu.c">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
+    </ClCompile>
+    <ClCompile Include="SparkFunMPU9250-DMP\util\inv_mpu_dmp_motion_driver.c">
+      <Filter>SparkFunMPU9259-DMP\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include <SparkFunMPU9250-DMP.h>
+#include "SparkFunMPU9250-DMP\SparkFunMPU9250-DMP.h"
 #include "LinkUp\LinkUpRaw.h"
 #include "LinkUp\Platform.h"
 
@@ -10,16 +10,16 @@
 #define LED_PIN 13
 
 #define CAMERA_SAMPLE_RATE 10
-#define TEMPERATUR_SAMPLE_RATE 40
+#define TEMPERATUR_SAMPLE_RATE 400
 #define CAMERA_TRIGGER_PULSE 2
 
 #define BUFFER_SIZE 64
 #define SAMPLE_RATE 200
-#define GYRO_FSR 2000
-#define ACCEL_FSR 16
+#define GYRO_FSR 500
+#define ACCEL_FSR 4
 #define LFP 188
 
-#define SEND_TIMEOUT 200*1
+#define SEND_TIMEOUT 200*2
 
 String readString;
 
@@ -61,6 +61,8 @@ PACK(ImuData{
 		imu.enableInterrupt();
 		imu.setIntLevel(INT_ACTIVE_LOW);
 		imu.setIntLatched(INT_LATCHED);
+
+		imu.setGyroBias(5, 67, -32);
 	}
 
 	void loop()
@@ -99,20 +101,20 @@ PACK(ImuData{
 			}
 			if (sample_counter % CAMERA_SAMPLE_RATE == 0)
 			{
-				bCamTrigger = true;
 				if (sendTimeout != 0)
 				{
+					bCamTrigger = true;
 					digitalWrite(CAMERA_TRIGGER_PIN, HIGH);
 				}
 			}
-			if ((sample_counter + CAMERA_TRIGGER_PULSE) % CAMERA_SAMPLE_RATE == 0)
+			if ((sample_counter - CAMERA_TRIGGER_PULSE) % CAMERA_SAMPLE_RATE == 0)
 			{
-				if (sendTimeout != 0)
-				{
-					digitalWrite(CAMERA_TRIGGER_PIN, LOW);
-				}
+				digitalWrite(CAMERA_TRIGGER_PIN, LOW);
 			}
-			sendIMUData(bCamTrigger);
+			if (sendTimeout != 0)
+			{
+				sendIMUData(bCamTrigger);
+			}
 			sample_counter++;
 		}
 		else
@@ -122,10 +124,7 @@ PACK(ImuData{
 
 			if (nBytesToSend > 0)
 			{
-				if (sendTimeout != 0)
-				{
-					SerialPort.write(pBuffer, nBytesToSend);
-				}
+				SerialPort.write(pBuffer, nBytesToSend);
 			}
 		}
 	}

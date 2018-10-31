@@ -87,12 +87,28 @@
     <ClInclude Include="LinkUp\CRC16.h" />
     <ClInclude Include="LinkUp\LinkUpRaw.h" />
     <ClInclude Include="LinkUp\Platform.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\MPU9250_RegisterMap.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\SparkFunMPU9250-DMP.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_clk.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_i2c.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_log.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\dmpKey.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\dmpmap.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\inv_mpu.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\inv_mpu_dmp_motion_driver.h" />
+    <ClInclude Include="SparkFunMPU9250-DMP\util\MPU9250_RegisterMap.h" />
     <ClInclude Include="__vm\.razor-imu.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LinkUp\CRC16.cpp" />
     <ClCompile Include="LinkUp\LinkUpRaw.cpp" />
     <ClCompile Include="LinkUp\Platform.cpp" />
+    <ClCompile Include="SparkFunMPU9250-DMP\SparkFunMPU9250-DMP.cpp" />
+    <ClCompile Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_clk.c" />
+    <ClCompile Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_i2c.cpp" />
+    <ClCompile Include="SparkFunMPU9250-DMP\util\arduino_mpu9250_log.cpp" />
+    <ClCompile Include="SparkFunMPU9250-DMP\util\inv_mpu.c" />
+    <ClCompile Include="SparkFunMPU9250-DMP\util\inv_mpu_dmp_motion_driver.c" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
