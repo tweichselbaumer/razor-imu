@@ -67,19 +67,6 @@ PACK(ImuData{
 
 	void loop()
 	{
-		if (SerialPort.available())
-		{
-			uint16_t nBytesRead = SerialPort.readBytes(pBuffer, BUFFER_SIZE);
-			linkUpConnector.progress(pBuffer, nBytesRead);
-			while (linkUpConnector.hasNext())
-			{
-				LinkUpPacket packet = linkUpConnector.next();
-				if (packet.nLength == 1 && packet.pData[0] == 1) {
-					sendTimeout = SEND_TIMEOUT;
-					free(packet.pData);
-				}
-			}
-		}
 		bool bCamTrigger = false;
 		if (digitalRead(INTERRUPT_PIN) == LOW)
 		{
@@ -116,6 +103,23 @@ PACK(ImuData{
 				sendIMUData(bCamTrigger);
 			}
 			sample_counter++;
+
+			if (SerialPort.available())
+			{
+				uint16_t nBytesRead = SerialPort.readBytes(pBuffer, BUFFER_SIZE);
+				linkUpConnector.progress(pBuffer, nBytesRead);
+			}
+			else
+			{
+				while (linkUpConnector.hasNext())
+				{
+					LinkUpPacket packet = linkUpConnector.next();
+					if (packet.nLength == 1 && packet.pData[0] == 1) {
+						sendTimeout = SEND_TIMEOUT;
+						free(packet.pData);
+					}
+				}
+			}
 		}
 		else
 		{
