@@ -79,6 +79,13 @@ inv_error_t MPU9250_DMP::setGyroBias(long x, long y, long z)
 	return mpu_set_gyro_bias_reg(bias);
 }
 
+inv_error_t MPU9250_DMP::setAccBias(long x, long y, long z)
+{
+	long bias[3] = { x,y,z };
+	return mpu_set_accel_bias_6500_reg(bias);
+}
+
+
 short MPU9250_DMP::getIntStatus(void)
 {
 	short status;

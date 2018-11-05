@@ -376,6 +376,7 @@ public:
 	int selfTest(unsigned char debug = 0);
 	
 	inv_error_t setGyroBias(long x, long y, long z);
+	inv_error_t setAccBias(long x, long y, long z);
 	
 private:
 	unsigned short _aSense;

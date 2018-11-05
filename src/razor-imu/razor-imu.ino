@@ -62,7 +62,9 @@ PACK(ImuData{
 		imu.setIntLevel(INT_ACTIVE_LOW);
 		imu.setIntLatched(INT_LATCHED);
 
+		/* constant bias correction */
 		imu.setGyroBias(5, 67, -32);
+		imu.setAccBias(6, 28, -71);
 	}
 
 	void loop()
