@@ -3,7 +3,7 @@
 #include "LinkUp\Platform.h"
 
 #define SerialPort Serial1
-#define BAUTRATE 115200
+#define BAUDRATE 115200
 
 #define INTERRUPT_PIN 4
 #define CAMERA_TRIGGER_PIN 10
@@ -49,7 +49,7 @@ PACK(ImuData{
 		pinMode(LED_PIN, OUTPUT);
 		pinMode(CAMERA_TRIGGER_PIN, OUTPUT);
 
-		SerialPort.begin(BAUTRATE);
+		SerialPort.begin(BAUDRATE);
 		SerialPort.setTimeout(1);
 
 		imu.begin();
